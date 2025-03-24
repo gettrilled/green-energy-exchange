@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Button from '../ui/Button';
+import { Link } from 'react-router-dom';
 
 const HowItWorks = () => {
   return (
@@ -56,9 +57,11 @@ const HowItWorks = () => {
         </div>
         
         <div className="text-center">
-          <Button size="lg">
-            Explore the Marketplace
-          </Button>
+          <Link to="/marketplace">
+            <Button size="lg">
+              Explore the Marketplace
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
