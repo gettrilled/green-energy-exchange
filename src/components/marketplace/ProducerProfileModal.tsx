@@ -115,7 +115,7 @@ const ProducerProfileModal: React.FC<ProducerProfileModalProps> = ({ isOpen, onC
         
         <DialogFooter>
           <Button onClick={onClose}>Close</Button>
-          <Button variant="default">Contact Producer</Button>
+          <Button variant="primary">Contact Producer</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
