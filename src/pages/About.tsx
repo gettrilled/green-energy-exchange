@@ -3,7 +3,7 @@ import React from 'react';
 import Navbar from '../components/layout/Navbar';
 import Button from '../components/ui/Button';
 import GlassCard from '../components/ui/GlassCard';
-import { ArrowRight, Globe, Leaf, LightbulbOff, Shield, Users, Zap } from 'lucide-react';
+import { Globe, Leaf, LightbulbOff, Shield, Users, Zap } from 'lucide-react';
 
 const About = () => {
   return (
@@ -141,24 +141,6 @@ const About = () => {
                 </p>
               </div>
             </div>
-          </div>
-        </div>
-        
-        {/* CTA Section */}
-        <div className="text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-6">Ready to Join the Energy Revolution?</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-            Whether you're interested in buying clean energy or have excess to sell, Green Grid Nexus provides 
-            the platform you need to participate in the sustainable energy marketplace.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="primary" className="group">
-              Join as Producer
-              <ArrowRight className="transition-transform group-hover:translate-x-1" />
-            </Button>
-            <Button variant="outline">
-              Join as Consumer
-            </Button>
           </div>
         </div>
       </div>
