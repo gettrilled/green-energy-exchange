@@ -2,7 +2,9 @@
 import React, { useState } from 'react';
 import Navbar from '../components/layout/Navbar';
 import GlassCard from '../components/ui/GlassCard';
-import Button from '../components/ui/Button';
+import { Button } from '../components/ui/Button';
+import PurchaseModal from '../components/marketplace/PurchaseModal';
+import ProducerProfileModal from '../components/marketplace/ProducerProfileModal';
 
 // Mock data for marketplace
 const energyListings = [
@@ -83,6 +85,9 @@ const energyListings = [
 const Marketplace = () => {
   const [energyTypeFilter, setEnergyTypeFilter] = useState<string>('all');
   const [sortOption, setSortOption] = useState<string>('price');
+  const [selectedListing, setSelectedListing] = useState<any>(null);
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   
   // Filter and sort listings
   const filteredListings = energyListings
@@ -97,6 +102,16 @@ const Marketplace = () => {
       }
       return 0;
     });
+  
+  const handleBuyNow = (listing: any) => {
+    setSelectedListing(listing);
+    setIsPurchaseModalOpen(true);
+  };
+  
+  const handleViewProfile = (listing: any) => {
+    setSelectedListing(listing);
+    setIsProfileModalOpen(true);
+  };
   
   return (
     <div className="min-h-screen bg-nexus-gray-light">
@@ -263,13 +278,16 @@ const Marketplace = () => {
                       <span className="text-sm text-gray-500 ml-1">/kWh</span>
                     </span>
                   </div>
-                  <Button variant="primary">
+                  <Button variant="primary" onClick={() => handleBuyNow(listing)}>
                     Buy Now
                   </Button>
                 </div>
                 
                 <div className="pt-4 border-t border-gray-100">
-                  <button className="text-nexus-green hover:text-nexus-green-dark text-sm font-medium flex items-center">
+                  <button 
+                    className="text-nexus-green hover:text-nexus-green-dark text-sm font-medium flex items-center"
+                    onClick={() => handleViewProfile(listing)}
+                  >
                     View Producer Profile
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M12 5l7 7-7 7" />
@@ -281,6 +299,23 @@ const Marketplace = () => {
           </div>
         </div>
       </div>
+      
+      {/* Modals */}
+      {selectedListing && (
+        <>
+          <PurchaseModal 
+            isOpen={isPurchaseModalOpen} 
+            onClose={() => setIsPurchaseModalOpen(false)} 
+            listing={selectedListing} 
+          />
+          
+          <ProducerProfileModal 
+            isOpen={isProfileModalOpen} 
+            onClose={() => setIsProfileModalOpen(false)} 
+            producer={selectedListing.producer} 
+          />
+        </>
+      )}
     </div>
   );
 };
