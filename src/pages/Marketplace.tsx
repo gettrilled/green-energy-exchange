@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/layout/Navbar';
 import GlassCard from '../components/ui/GlassCard';
-import { Button } from '../components/ui/Button';
+import Button from '../components/ui/Button';
 import PurchaseModal from '../components/marketplace/PurchaseModal';
 import ProducerProfileModal from '../components/marketplace/ProducerProfileModal';
 
