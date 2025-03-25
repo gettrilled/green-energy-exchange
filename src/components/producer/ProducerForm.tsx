@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -7,9 +6,11 @@ import { Textarea } from '@/components/ui/textarea';
 import Button from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { useEnergyListings } from '@/context/EnergyListingsContext';
 
 const ProducerForm = () => {
   const navigate = useNavigate();
+  const { addListing } = useEnergyListings();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Form state
@@ -40,17 +41,23 @@ const ProducerForm = () => {
       return;
     }
 
-    // Simulate API call
-    setTimeout(() => {
-      // Success message
-      toast.success("Energy listing created successfully!");
+    // Add the new listing
+    addListing({
+      energyType: formData.energyType,
+      available: Number(formData.quantity),
+      price: Number(formData.price),
+      location: formData.location,
+      description: formData.description,
+    });
+
+    // Success message
+    toast.success("Energy listing created successfully!");
       
-      // Reset form state
-      setIsSubmitting(false);
+    // Reset form state
+    setIsSubmitting(false);
       
-      // Redirect to marketplace
-      navigate('/marketplace');
-    }, 1500);
+    // Redirect to marketplace
+    navigate('/marketplace');
   };
 
   return (

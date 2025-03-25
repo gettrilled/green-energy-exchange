@@ -1,13 +1,15 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import GlassCard from '../components/ui/GlassCard';
 import Button from '../components/ui/Button';
 import PurchaseModal from '../components/marketplace/PurchaseModal';
 import ProducerProfileModal from '../components/marketplace/ProducerProfileModal';
+import { useEnergyListings } from '../context/EnergyListingsContext';
 
 // Mock data for marketplace
-const energyListings = [
+const defaultEnergyListings = [
   {
     id: 1,
     producer: {
@@ -83,15 +85,19 @@ const energyListings = [
 ];
 
 const Marketplace = () => {
+  const { listings: userListings } = useEnergyListings();
   const [energyTypeFilter, setEnergyTypeFilter] = useState<string>('all');
   const [sortOption, setSortOption] = useState<string>('price');
   const [selectedListing, setSelectedListing] = useState<any>(null);
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   
+  // Combine user-added listings with mock listings
+  const allListings = [...userListings, ...defaultEnergyListings];
+  
   // Filter and sort listings
-  const filteredListings = energyListings
-    .filter(listing => energyTypeFilter === 'all' || listing.energyType.toLowerCase() === energyTypeFilter)
+  const filteredListings = allListings
+    .filter(listing => energyTypeFilter === 'all' || listing.energyType.toLowerCase() === energyTypeFilter.toLowerCase())
     .sort((a, b) => {
       if (sortOption === 'price') {
         return a.price - b.price;
@@ -120,13 +126,26 @@ const Marketplace = () => {
       <div className="pt-24 pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Marketplace Header */}
-          <div className="mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-2">
-              Energy Marketplace
-            </h1>
-            <p className="text-gray-600">
-              Find and purchase renewable energy from local producers
-            </p>
+          <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold mb-2">
+                Energy Marketplace
+              </h1>
+              <p className="text-gray-600">
+                Find and purchase renewable energy from local producers
+              </p>
+            </div>
+            
+            <div className="mt-4 md:mt-0">
+              <Link to="/producer-listing">
+                <Button variant="primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 5v14M18 12H6" />
+                  </svg>
+                  List New Energy
+                </Button>
+              </Link>
+            </div>
           </div>
           
           {/* Filters and Sorting */}
@@ -296,6 +315,18 @@ const Marketplace = () => {
                 </div>
               </GlassCard>
             ))}
+            
+            {filteredListings.length === 0 && (
+              <div className="col-span-3 text-center py-12">
+                <h3 className="text-lg font-medium text-gray-600 mb-2">No energy listings found</h3>
+                <p className="text-gray-500 mb-6">Try adjusting your filters or add a new listing</p>
+                <Link to="/producer-listing">
+                  <Button variant="primary">
+                    List New Energy
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
