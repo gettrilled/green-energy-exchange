@@ -1,24 +1,38 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/layout/Navbar';
 import GlassCard from '../components/ui/GlassCard';
 import Button from '../components/ui/Button';
 import { toast } from "sonner";
+import { useLocation } from 'react-router-dom';
 
 const UserProfile = () => {
-  // Mock user data - in a real app, this would come from authentication state
-  const userData = {
-    name: 'Rohan Sharma',
-    email: 'rohan.sharma@example.com',
-    location: 'Bangalore, Karnataka',
-    userType: 'producer', // or 'consumer'
-    joinedDate: 'June 2023',
-    profileImage: null,
-  };
+  const location = useLocation();
+  const userDataFromAuth = location.state?.userData || {};
+  
+  const [userData, setUserData] = useState({
+    name: userDataFromAuth.name || '',
+    email: userDataFromAuth.email || '',
+    location: userDataFromAuth.location || '',
+    userType: userDataFromAuth.userType || 'consumer',
+    joinedDate: userDataFromAuth.joinedDate || new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+    profileImage: userDataFromAuth.profileImage || null,
+  });
 
   const handleSaveChanges = () => {
+    setUserData({
+      ...userData,
+    });
     toast.success("Profile updated successfully!");
   };
+
+  useEffect(() => {
+    if (location.state?.userData) {
+      setUserData(prevData => ({
+        ...prevData,
+        ...location.state.userData,
+      }));
+    }
+  }, [location.state?.userData]);
 
   return (
     <div className="min-h-screen bg-nexus-gray-light">
@@ -26,7 +40,6 @@ const UserProfile = () => {
       
       <div className="pt-24 pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Profile Header */}
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold mb-2">
               My Profile
@@ -37,7 +50,6 @@ const UserProfile = () => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Profile Sidebar */}
             <div className="lg:col-span-1">
               <GlassCard className="p-6">
                 <div className="flex flex-col items-center">
@@ -50,13 +62,13 @@ const UserProfile = () => {
                       />
                     ) : (
                       <span className="text-4xl font-bold text-nexus-green">
-                        {userData.name.charAt(0)}
+                        {userData.name ? userData.name.charAt(0) : '?'}
                       </span>
                     )}
                   </div>
                   
-                  <h2 className="text-xl font-bold mb-1">{userData.name}</h2>
-                  <p className="text-gray-600 mb-2">{userData.email}</p>
+                  <h2 className="text-xl font-bold mb-1">{userData.name || 'User Name'}</h2>
+                  <p className="text-gray-600 mb-2">{userData.email || 'email@example.com'}</p>
                   
                   <div className="inline-block px-3 py-1 text-xs font-medium bg-nexus-green/10 text-nexus-green rounded-full mb-4">
                     {userData.userType === 'producer' ? 'Energy Producer' : 'Energy Consumer'}
@@ -120,7 +132,6 @@ const UserProfile = () => {
               </GlassCard>
             </div>
             
-            {/* Profile Content */}
             <div className="lg:col-span-2">
               <GlassCard className="p-6" id="personal-info">
                 <h3 className="text-lg font-medium text-gray-700 mb-6">Personal Information</h3>
@@ -136,6 +147,7 @@ const UserProfile = () => {
                         type="text"
                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-nexus-green/50"
                         defaultValue={userData.name}
+                        onChange={(e) => setUserData({...userData, name: e.target.value})}
                       />
                     </div>
                     
@@ -148,6 +160,7 @@ const UserProfile = () => {
                         type="email"
                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-nexus-green/50"
                         defaultValue={userData.email}
+                        onChange={(e) => setUserData({...userData, email: e.target.value})}
                       />
                     </div>
                     
@@ -172,6 +185,7 @@ const UserProfile = () => {
                         type="text"
                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-nexus-green/50"
                         defaultValue={userData.location}
+                        onChange={(e) => setUserData({...userData, location: e.target.value})}
                       />
                     </div>
                   </div>

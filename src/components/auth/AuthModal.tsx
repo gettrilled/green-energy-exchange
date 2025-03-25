@@ -30,6 +30,16 @@ const AuthModal = ({ isOpen, onClose, initialMode }: AuthModalProps) => {
     setTimeout(() => {
       setIsSubmitting(false);
       
+      // Prepare user data to pass to the profile page
+      const userData = {
+        name: name || (mode === 'login' ? email.split('@')[0] : ''),
+        email,
+        location,
+        userType,
+        joinedDate: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+        profileImage: null,
+      };
+      
       if (mode === 'login') {
         toast.success("Successfully logged in!");
       } else {
@@ -38,8 +48,8 @@ const AuthModal = ({ isOpen, onClose, initialMode }: AuthModalProps) => {
       
       onClose();
       
-      // Redirect to user profile page after successful login/register
-      navigate('/profile');
+      // Redirect to user profile page with user data
+      navigate('/profile', { state: { userData } });
       
       // Reset form
       setEmail('');
