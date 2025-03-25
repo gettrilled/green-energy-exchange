@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
 import GlassCard from '../ui/GlassCard';
 
@@ -34,19 +34,16 @@ const Hero = ({ onOpenAuthModal }: HeroProps) => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-down animate-delay-300">
-            <Button 
-              size="lg" 
-              onClick={() => onOpenAuthModal('register')}
-            >
-              Join as Producer
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              onClick={() => onOpenAuthModal('register')}
-            >
-              Join as Consumer
-            </Button>
+            <Link to="/producer-listing">
+              <Button size="lg">
+                Join as Producer
+              </Button>
+            </Link>
+            <Link to="/marketplace">
+              <Button variant="outline" size="lg">
+                Join as Consumer
+              </Button>
+            </Link>
           </div>
           
           <div className="mt-12 flex items-center justify-center lg:justify-start space-x-8 animate-fade-down animate-delay-400">
