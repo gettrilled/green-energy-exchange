@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { toast } from "sonner";
 import Button from '../ui/Button';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface AuthModalProps {
 const AuthModal = ({ isOpen, onClose, initialMode }: AuthModalProps) => {
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [userType, setUserType] = useState<'producer' | 'consumer'>('consumer');
+  const navigate = useNavigate();
   
   // Form states
   const [email, setEmail] = useState('');
@@ -35,6 +37,9 @@ const AuthModal = ({ isOpen, onClose, initialMode }: AuthModalProps) => {
       }
       
       onClose();
+      
+      // Redirect to user profile page after successful login/register
+      navigate('/profile');
       
       // Reset form
       setEmail('');
