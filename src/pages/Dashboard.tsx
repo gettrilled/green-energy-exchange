@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import GlassCard from '../components/ui/GlassCard';
 import Button from '../components/ui/Button';
 import Navbar from '../components/layout/Navbar';
@@ -29,6 +28,11 @@ const producerData = {
 
 const Dashboard = () => {
   const [userType] = useState<'producer' | 'consumer'>('producer');
+  const navigate = useNavigate();
+  
+  const handleListNewEnergy = () => {
+    navigate('/producer-listing');
+  };
   
   return (
     <div className="min-h-screen bg-nexus-gray-light">
@@ -50,7 +54,7 @@ const Dashboard = () => {
             </div>
             
             <div className="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
-              <Button variant="primary">
+              <Button variant="primary" onClick={handleListNewEnergy}>
                 {userType === 'producer' ? 'List New Energy' : 'Browse Marketplace'}
               </Button>
               <Button variant="outline">
@@ -152,7 +156,7 @@ const Dashboard = () => {
               <div className="mt-2 flex items-center text-xs">
                 <span className="text-red-500 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M6 9l6 6 6-6" />
+                    <path d="M6 9l6 6-6 6" />
                   </svg>
                   4.2% from last week
                 </span>
@@ -186,7 +190,7 @@ const Dashboard = () => {
               </div>
               
               <div className="space-y-4">
-                <Button variant="primary" fullWidth className="justify-start">
+                <Button variant="primary" fullWidth className="justify-start" onClick={handleListNewEnergy}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 5v14M18 12H6" />
                   </svg>
@@ -195,7 +199,7 @@ const Dashboard = () => {
                 
                 <Button variant="outline" fullWidth className="justify-start">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 1 2 2h14a2 2 0 0 1 2-2v-7" />
                     <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" />
                   </svg>
                   Edit Smart Meter Settings
@@ -292,3 +296,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
