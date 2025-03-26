@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
+
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
 import { Link } from 'react-router-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ethers } from 'ethers'; 
+import { Web3Provider } from '@ethersproject/providers'; 
 import Button from '../ui/Button';
 import AuthModal from '../auth/AuthModal';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -14,11 +23,11 @@ const Navbar = () => {
   const [userType, setUserType] = useState<'producer' | 'consumer'>('consumer');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState<any>(null);
-  
+  const [walletAddress, setWalletAddress] = useState<string | null>(null); 
   const location = useLocation();
   const navigate = useNavigate();
-  
-  // Check if user is authenticated on mount and location change
+
+
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -27,7 +36,7 @@ const Navbar = () => {
       setUserType(JSON.parse(storedUser).userType);
     }
   }, [location]);
-  
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -36,17 +45,17 @@ const Navbar = () => {
         setIsScrolled(false);
       }
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
+
   const handleOpenAuthModal = (mode: 'login' | 'register', type: 'producer' | 'consumer' = 'consumer') => {
     setAuthMode(mode);
     setUserType(type);
     setIsAuthModalOpen(true);
   };
-  
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     setIsAuthenticated(false);
@@ -61,14 +70,37 @@ const Navbar = () => {
       navigate('/profile');
     }
   };
+
   
+  const connectWallet = async () => {
+    if (window.ethereum) {
+        const provider = new Web3Provider(window.ethereum); 
+        await provider.send('eth_requestAccounts', []); 
+        const signer = provider.getSigner();
+        const userAddress = await signer.getAddress();
+        setWalletAddress(userAddress); // Set wallet address in state
+        console.log('Connected:', userAddress);
+      try {
+        const provider = new Web3Provider(window.ethereum); // Use Web3Provider from @ethersproject/providers
+        await provider.send('eth_requestAccounts', []); // Request accounts
+        const signer = provider.getSigner();
+        const userAddress = await signer.getAddress();
+        setWalletAddress(userAddress); // Set wallet address in state
+        console.log('Connected:', userAddress);
+      } catch (err) {
+        console.error('Wallet connection failed:', err);
+      }
+    } else {
+      alert('Please install MetaMask to connect your wallet');
+    }
+  };
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'How It Works', path: '/how-it-works' },
     { name: 'Marketplace', path: '/marketplace' },
     { name: 'About', path: '/about' },
   ];
-  
+
   const isActive = (path: string) => {
     return location.pathname === path;
   };
@@ -107,8 +139,21 @@ const Navbar = () => {
               ))}
             </div>
             
-            {/* Auth Buttons and Profile Avatar (Desktop) */}
+            {/* Wallet + Auth Buttons and Profile Avatar (Desktop) */}
             <div className="hidden md:flex items-center space-x-3">
+              {walletAddress ? (
+                <span className="text-sm text-gray-600">
+                  {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+                </span>
+              ) : (
+                <Button 
+                  variant="ghost"
+                  size="sm"
+                  onClick={connectWallet}
+                >
+                  Connect Wallet
+                </Button>
+              )}
               {isAuthenticated ? (
                 <>
                   <div className="text-sm text-gray-600 mr-2">
@@ -151,22 +196,18 @@ const Navbar = () => {
             
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-2">
-              {isAuthenticated ? (
-                <Link to="/profile" className="flex items-center mr-1 text-gray-700 hover:text-nexus-green transition-colors">
-                  <Avatar className="h-7 w-7 border border-gray-200">
-                    <AvatarFallback className="bg-nexus-green/10 text-nexus-green">
-                      {userData?.name ? userData.name.charAt(0).toUpperCase() : <User className="h-3 w-3" />}
-                    </AvatarFallback>
-                  </Avatar>
-                </Link>
+              {walletAddress ? (
+                <span className="text-sm text-gray-600">
+                  {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+                </span>
               ) : (
-                <Link to="/profile" className="flex items-center mr-1 text-gray-700 hover:text-nexus-green transition-colors">
-                  <Avatar className="h-7 w-7 border border-gray-200">
-                    <AvatarFallback className="bg-nexus-green/10 text-nexus-green">
-                      <User className="h-3 w-3" />
-                    </AvatarFallback>
-                  </Avatar>
-                </Link>
+                <Button 
+                  variant="ghost"
+                  size="sm"
+                  onClick={connectWallet}
+                >
+                  Connect Wallet
+                </Button>
               )}
               <button
                 type="button"
