@@ -11,9 +11,11 @@ import Button from '../components/ui/Button';
 const Index = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
+  const [userType, setUserType] = useState<'producer' | 'consumer'>('consumer');
   
-  const handleOpenAuthModal = (mode: 'login' | 'register') => {
+  const handleOpenAuthModal = (mode: 'login' | 'register', type: 'producer' | 'consumer' = 'consumer') => {
     setAuthMode(mode);
+    setUserType(type);
     setIsAuthModalOpen(true);
   };
 
@@ -201,6 +203,7 @@ const Index = () => {
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)}
         initialMode={authMode}
+        initialUserType={userType}
       />
     </div>
   );

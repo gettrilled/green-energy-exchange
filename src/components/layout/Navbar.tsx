@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../ui/Button';
 import AuthModal from '../auth/AuthModal';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -12,10 +11,12 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [userType, setUserType] = useState<'producer' | 'consumer'>('consumer');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState<any>(null);
   
   const location = useLocation();
+  const navigate = useNavigate();
   
   // Check if user is authenticated on mount and location change
   useEffect(() => {
@@ -23,6 +24,7 @@ const Navbar = () => {
     if (storedUser) {
       setIsAuthenticated(true);
       setUserData(JSON.parse(storedUser));
+      setUserType(JSON.parse(storedUser).userType);
     }
   }, [location]);
   
@@ -39,8 +41,9 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
-  const handleOpenAuthModal = (mode: 'login' | 'register') => {
+  const handleOpenAuthModal = (mode: 'login' | 'register', type: 'producer' | 'consumer' = 'consumer') => {
     setAuthMode(mode);
+    setUserType(type);
     setIsAuthModalOpen(true);
   };
   
@@ -48,7 +51,15 @@ const Navbar = () => {
     localStorage.removeItem('user');
     setIsAuthenticated(false);
     setUserData(null);
-    window.location.href = '/';
+    navigate('/');
+  };
+
+  const handleProfileClick = () => {
+    if (userData?.userType === 'producer') {
+      navigate('/dashboard');
+    } else {
+      navigate('/profile');
+    }
   };
   
   const navLinks = [
@@ -100,13 +111,16 @@ const Navbar = () => {
             <div className="hidden md:flex items-center space-x-3">
               {isAuthenticated ? (
                 <>
-                  <Link to="/profile" className="flex items-center text-gray-700 hover:text-nexus-green transition-colors">
+                  <div className="text-sm text-gray-600 mr-2">
+                    Hello, {userData?.name || 'User'}
+                  </div>
+                  <div onClick={handleProfileClick} className="flex items-center text-gray-700 hover:text-nexus-green transition-colors cursor-pointer">
                     <Avatar className="h-8 w-8 border border-gray-200">
                       <AvatarFallback className="bg-nexus-green/10 text-nexus-green">
                         {userData?.name ? userData.name.charAt(0).toUpperCase() : <User className="h-4 w-4" />}
                       </AvatarFallback>
                     </Avatar>
-                  </Link>
+                  </div>
                   <Button 
                     variant="ghost"
                     size="sm"
@@ -261,6 +275,7 @@ const Navbar = () => {
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)}
         initialMode={authMode}
+        initialUserType={userType}
       />
     </>
   );

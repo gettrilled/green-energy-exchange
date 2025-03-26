@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -18,7 +19,14 @@ const ProducerForm = () => {
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUserData(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUserData(parsedUser);
+      
+      // If user is not a producer, redirect to marketplace
+      if (parsedUser.userType !== 'producer') {
+        toast.error("Only producers can list energy");
+        navigate('/marketplace');
+      }
     } else {
       // Redirect to home if not authenticated
       toast.error("Please sign in to list your energy");
@@ -54,13 +62,19 @@ const ProducerForm = () => {
       return;
     }
 
-    // Add the new listing
+    // Add the new listing with producer info
     addListing({
       energyType: formData.energyType,
       available: Number(formData.quantity),
       price: Number(formData.price),
       location: formData.location,
       description: formData.description,
+      producer: {
+        name: userData?.name || "Anonymous", 
+        rating: 4.7,
+        location: formData.location
+      },
+      distance: Math.round(Math.random() * 10),
     });
 
     // Success message

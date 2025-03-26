@@ -1,66 +1,60 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
-export interface Producer {
-  name: string;
-  rating: number;
-  location: string;
-}
-
+// Define the shape of an energy listing
 export interface EnergyListing {
   id: number;
-  producer: Producer;
+  producer: {
+    name: string;
+    rating: number;
+    location: string;
+  };
   energyType: string;
   available: number;
   price: number;
-  distance: number;
   description?: string;
+  distance: number;
+  location: string;
 }
 
-interface EnergyListingsContextType {
+// Define the shape of the context
+interface EnergyListingsContextProps {
   listings: EnergyListing[];
-  addListing: (listing: Omit<EnergyListing, 'id' | 'producer' | 'distance'> & { location: string }) => void;
+  addListing: (listing: Omit<EnergyListing, 'id'>) => void;
+  removeListing: (id: number) => void;
 }
 
-const EnergyListingsContext = createContext<EnergyListingsContextType | undefined>(undefined);
+// Create the context
+const EnergyListingsContext = createContext<EnergyListingsContextProps | undefined>(undefined);
 
-export const useEnergyListings = () => {
-  const context = useContext(EnergyListingsContext);
-  if (!context) {
-    throw new Error('useEnergyListings must be used within an EnergyListingsProvider');
-  }
-  return context;
-};
+// Provider component
+export const EnergyListingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [listings, setListings] = useState<EnergyListing[]>([]);
 
-interface EnergyListingsProviderProps {
-  children: ReactNode;
-  initialListings?: EnergyListing[];
-}
-
-export const EnergyListingsProvider: React.FC<EnergyListingsProviderProps> = ({ children, initialListings = [] }) => {
-  const [listings, setListings] = useState<EnergyListing[]>(initialListings);
-
-  const addListing = (listingData: Omit<EnergyListing, 'id' | 'producer' | 'distance'> & { location: string }) => {
-    const newListing: EnergyListing = {
-      id: Date.now(), // Simple unique ID generation
-      producer: {
-        name: 'You', // Default to current user
-        rating: 5.0, // Default rating
-        location: listingData.location,
-      },
-      energyType: listingData.energyType,
-      available: Number(listingData.available),
-      price: Number(listingData.price),
-      distance: 0, // Default to 0 for current user
-      description: listingData.description,
+  const addListing = (listing: Omit<EnergyListing, 'id'>) => {
+    const newListing = {
+      ...listing,
+      id: Date.now(),
     };
+    setListings(prev => [...prev, newListing]);
+  };
 
-    setListings(prev => [newListing, ...prev]);
+  const removeListing = (id: number) => {
+    setListings(prev => prev.filter(listing => listing.id !== id));
   };
 
   return (
-    <EnergyListingsContext.Provider value={{ listings, addListing }}>
+    <EnergyListingsContext.Provider value={{ listings, addListing, removeListing }}>
       {children}
     </EnergyListingsContext.Provider>
   );
+};
+
+// Custom hook to use the energy listings context
+export const useEnergyListings = () => {
+  const context = useContext(EnergyListingsContext);
+  if (context === undefined) {
+    throw new Error('useEnergyListings must be used within an EnergyListingsProvider');
+  }
+  return context;
 };

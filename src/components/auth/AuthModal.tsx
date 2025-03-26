@@ -8,11 +8,12 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialMode: 'login' | 'register';
+  initialUserType?: 'producer' | 'consumer';
 }
 
-const AuthModal = ({ isOpen, onClose, initialMode }: AuthModalProps) => {
+const AuthModal = ({ isOpen, onClose, initialMode, initialUserType = 'consumer' }: AuthModalProps) => {
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
-  const [userType, setUserType] = useState<'producer' | 'consumer'>('consumer');
+  const [userType, setUserType] = useState<'producer' | 'consumer'>(initialUserType);
   const navigate = useNavigate();
   
   // Form states
@@ -51,8 +52,12 @@ const AuthModal = ({ isOpen, onClose, initialMode }: AuthModalProps) => {
       
       onClose();
       
-      // Redirect to user profile page with user data
-      navigate('/profile', { state: { userData } });
+      // Redirect based on user type
+      if (userType === 'producer') {
+        navigate('/dashboard');
+      } else {
+        navigate('/marketplace');
+      }
       
       // Reset form
       setEmail('');
