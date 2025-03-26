@@ -30,7 +30,7 @@ const AuthModal = ({ isOpen, onClose, initialMode }: AuthModalProps) => {
     setTimeout(() => {
       setIsSubmitting(false);
       
-      // Prepare user data to pass to the profile page
+      // Prepare user data to store
       const userData = {
         name: name || (mode === 'login' ? email.split('@')[0] : ''),
         email,
@@ -39,6 +39,9 @@ const AuthModal = ({ isOpen, onClose, initialMode }: AuthModalProps) => {
         joinedDate: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
         profileImage: null,
       };
+      
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(userData));
       
       if (mode === 'login') {
         toast.success("Successfully logged in!");

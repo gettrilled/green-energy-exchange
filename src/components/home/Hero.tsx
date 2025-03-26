@@ -34,11 +34,9 @@ const Hero = ({ onOpenAuthModal }: HeroProps) => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-down animate-delay-300">
-            <Link to="/producer-listing">
-              <Button size="lg">
-                Join as Producer
-              </Button>
-            </Link>
+            <Button size="lg" onClick={() => onOpenAuthModal('register')}>
+              Join as Producer
+            </Button>
             <Link to="/marketplace">
               <Button variant="outline" size="lg">
                 Join as Consumer
@@ -136,7 +134,6 @@ const Hero = ({ onOpenAuthModal }: HeroProps) => {
             </div>
           </GlassCard>
           
-          {/* Decorative Elements */}
           <div className="absolute top-10 -right-10 w-32 h-32 bg-nexus-blue/20 rounded-full blur-xl z-0 animate-pulse-slow"></div>
           <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-nexus-green/20 rounded-full blur-xl z-0 animate-pulse-slow animation-delay-500"></div>
         </div>

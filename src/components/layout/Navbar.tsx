@@ -12,8 +12,19 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userData, setUserData] = useState<any>(null);
   
   const location = useLocation();
+  
+  // Check if user is authenticated on mount and location change
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setIsAuthenticated(true);
+      setUserData(JSON.parse(storedUser));
+    }
+  }, [location]);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -31,6 +42,13 @@ const Navbar = () => {
   const handleOpenAuthModal = (mode: 'login' | 'register') => {
     setAuthMode(mode);
     setIsAuthModalOpen(true);
+  };
+  
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setIsAuthenticated(false);
+    setUserData(null);
+    window.location.href = '/';
   };
   
   const navLinks = [
@@ -80,38 +98,62 @@ const Navbar = () => {
             
             {/* Auth Buttons and Profile Avatar (Desktop) */}
             <div className="hidden md:flex items-center space-x-3">
-              <Link to="/profile" className="flex items-center text-gray-700 hover:text-nexus-green transition-colors">
-                <Avatar className="h-8 w-8 border border-gray-200">
-                  <AvatarFallback className="bg-nexus-green/10 text-nexus-green">
-                    <User className="h-4 w-4" />
-                  </AvatarFallback>
-                </Avatar>
-              </Link>
-              <Button 
-                variant="ghost"
-                size="sm"
-                onClick={() => handleOpenAuthModal('login')}
-              >
-                Log In
-              </Button>
-              <Button 
-                variant="primary"
-                size="sm"
-                onClick={() => handleOpenAuthModal('register')}
-              >
-                Sign Up
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <Link to="/profile" className="flex items-center text-gray-700 hover:text-nexus-green transition-colors">
+                    <Avatar className="h-8 w-8 border border-gray-200">
+                      <AvatarFallback className="bg-nexus-green/10 text-nexus-green">
+                        {userData?.name ? userData.name.charAt(0).toUpperCase() : <User className="h-4 w-4" />}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
+                  <Button 
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleLogout}
+                  >
+                    Log Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button 
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleOpenAuthModal('login')}
+                  >
+                    Log In
+                  </Button>
+                  <Button 
+                    variant="primary"
+                    size="sm"
+                    onClick={() => handleOpenAuthModal('register')}
+                  >
+                    Sign Up
+                  </Button>
+                </>
+              )}
             </div>
             
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-2">
-              <Link to="/profile" className="flex items-center mr-1 text-gray-700 hover:text-nexus-green transition-colors">
-                <Avatar className="h-7 w-7 border border-gray-200">
-                  <AvatarFallback className="bg-nexus-green/10 text-nexus-green">
-                    <User className="h-3 w-3" />
-                  </AvatarFallback>
-                </Avatar>
-              </Link>
+              {isAuthenticated ? (
+                <Link to="/profile" className="flex items-center mr-1 text-gray-700 hover:text-nexus-green transition-colors">
+                  <Avatar className="h-7 w-7 border border-gray-200">
+                    <AvatarFallback className="bg-nexus-green/10 text-nexus-green">
+                      {userData?.name ? userData.name.charAt(0).toUpperCase() : <User className="h-3 w-3" />}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
+              ) : (
+                <Link to="/profile" className="flex items-center mr-1 text-gray-700 hover:text-nexus-green transition-colors">
+                  <Avatar className="h-7 w-7 border border-gray-200">
+                    <AvatarFallback className="bg-nexus-green/10 text-nexus-green">
+                      <User className="h-3 w-3" />
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
+              )}
               <button
                 type="button"
                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-nexus-green"
@@ -174,26 +216,41 @@ const Navbar = () => {
               </Link>
             ))}
             <div className="pt-4 pb-2 border-t border-gray-200 flex flex-col space-y-2">
-              <Button 
-                variant="outline"
-                fullWidth
-                onClick={() => {
-                  handleOpenAuthModal('login');
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                Log In
-              </Button>
-              <Button 
-                variant="primary"
-                fullWidth
-                onClick={() => {
-                  handleOpenAuthModal('register');
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                Sign Up
-              </Button>
+              {isAuthenticated ? (
+                <Button 
+                  variant="outline"
+                  fullWidth
+                  onClick={() => {
+                    handleLogout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  Log Out
+                </Button>
+              ) : (
+                <>
+                  <Button 
+                    variant="outline"
+                    fullWidth
+                    onClick={() => {
+                      handleOpenAuthModal('login');
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Log In
+                  </Button>
+                  <Button 
+                    variant="primary"
+                    fullWidth
+                    onClick={() => {
+                      handleOpenAuthModal('register');
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Sign Up
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

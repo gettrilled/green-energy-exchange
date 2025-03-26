@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -12,6 +13,19 @@ const ProducerForm = () => {
   const navigate = useNavigate();
   const { addListing } = useEnergyListings();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userData, setUserData] = useState<any>(null);
+  
+  // Check if user is authenticated
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUserData(JSON.parse(storedUser));
+    } else {
+      // Redirect to home if not authenticated
+      toast.error("Please sign in to list your energy");
+      navigate('/');
+    }
+  }, [navigate]);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -43,11 +57,18 @@ const ProducerForm = () => {
 
     // Add the new listing
     addListing({
+      id: Date.now(), // Generate unique ID
+      producer: {
+        name: userData?.name || "Anonymous",
+        rating: 4.7,
+        location: formData.location
+      },
       energyType: formData.energyType,
       available: Number(formData.quantity),
       price: Number(formData.price),
       location: formData.location,
       description: formData.description,
+      distance: Math.round(Math.random() * 10),
     });
 
     // Success message
@@ -59,6 +80,24 @@ const ProducerForm = () => {
     // Redirect to marketplace
     navigate('/marketplace');
   };
+
+  if (!userData) {
+    return (
+      <Card className="w-full max-w-2xl mx-auto mt-24">
+        <CardHeader>
+          <CardTitle className="text-2xl">Authentication Required</CardTitle>
+          <CardDescription>
+            Please sign in to list your energy on Green Grid Nexus
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex justify-center p-6">
+          <Button onClick={() => navigate('/')}>
+            Return to Home
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
