@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -57,18 +56,11 @@ const ProducerForm = () => {
 
     // Add the new listing
     addListing({
-      id: Date.now(), // Generate unique ID
-      producer: {
-        name: userData?.name || "Anonymous",
-        rating: 4.7,
-        location: formData.location
-      },
       energyType: formData.energyType,
       available: Number(formData.quantity),
       price: Number(formData.price),
       location: formData.location,
       description: formData.description,
-      distance: Math.round(Math.random() * 10),
     });
 
     // Success message
