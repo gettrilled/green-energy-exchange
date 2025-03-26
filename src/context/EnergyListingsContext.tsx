@@ -15,6 +15,7 @@ export interface EnergyListing {
   description?: string;
   distance: number;
   location: string;
+  image?: string;
 }
 
 // Define the shape of the context
