@@ -56,8 +56,8 @@ const Hero = ({ onOpenAuthModal }: HeroProps) => {
             <div className="relative">
               <div className="w-full h-full rounded-2xl bg-gradient-to-br from-nexus-green/80 to-nexus-blue/80 p-6">
                 <img 
-                  src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" 
-                  alt="Renewable energy exchange platform" 
+                  src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" 
+                  alt="Renewable energy solar panels" 
                   className="w-full h-full object-cover rounded-xl"
                 />
               </div>
