@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import Button from '../ui/Button';
 import AuthModal from '../auth/AuthModal';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { User } from 'lucide-react';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -76,8 +78,15 @@ const Navbar = () => {
               ))}
             </div>
             
-            {/* Auth Buttons (Desktop) */}
+            {/* Auth Buttons and Profile Avatar (Desktop) */}
             <div className="hidden md:flex items-center space-x-3">
+              <Link to="/profile" className="flex items-center text-gray-700 hover:text-nexus-green transition-colors">
+                <Avatar className="h-8 w-8 border border-gray-200">
+                  <AvatarFallback className="bg-nexus-green/10 text-nexus-green">
+                    <User className="h-4 w-4" />
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
               <Button 
                 variant="ghost"
                 size="sm"
@@ -95,7 +104,14 @@ const Navbar = () => {
             </div>
             
             {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center">
+            <div className="md:hidden flex items-center space-x-2">
+              <Link to="/profile" className="flex items-center mr-1 text-gray-700 hover:text-nexus-green transition-colors">
+                <Avatar className="h-7 w-7 border border-gray-200">
+                  <AvatarFallback className="bg-nexus-green/10 text-nexus-green">
+                    <User className="h-3 w-3" />
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
               <button
                 type="button"
                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-nexus-green"
