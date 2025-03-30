@@ -9,14 +9,19 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  build: {
+    outDir: "dist", // Ensure the output directory is set for Vercel
+    emptyOutDir: true, // Clean the output directory before building
+  },
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
+    mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Add base path for Vercel if needed
+  base: mode === "production" ? "/" : "/", // Adjust if deploying to a subpath
 }));
