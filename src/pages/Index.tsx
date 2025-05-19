@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '../components/layout/Navbar';
 import Hero from '../components/home/Hero';
@@ -7,6 +6,7 @@ import HowItWorks from '../components/home/HowItWorks';
 import AuthModal from '../components/auth/AuthModal';
 import GlassCard from '../components/ui/GlassCard';
 import Button from '../components/ui/Button';
+import ChatBot from '../components/ui/ChatBot';
 
 const Index = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -205,6 +205,8 @@ const Index = () => {
         initialMode={authMode}
         initialUserType={userType}
       />
+
+      <ChatBot />
     </div>
   );
 };

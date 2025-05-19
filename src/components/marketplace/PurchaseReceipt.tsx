@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/buttonShadcn";
 import { Check, Download } from "lucide-react";
@@ -30,7 +29,19 @@ const PurchaseReceipt: React.FC<PurchaseReceiptProps> = ({
   handleClose
 }) => {
   const downloadReceipt = () => {
-    // In a real app, this would generate a PDF or print the receipt
+    // Generate a simple text receipt
+    const receiptText = `Green Grid Nexus\n\nPAYMENT RECEIPT\n---------------------\nTransaction ID: ${transactionId}\nDate & Time: ${new Date().toLocaleString()}\nPayment Method: ${selectedPaymentMethod}\nProducer: ${producer.name}\nEnergy Type: ${energyType}\nQuantity: ${quantity.toFixed(1)} kWh\nPrice per kWh: ₹${price.toFixed(2)}\nPlatform Fee (2%): ₹${platformFee.toFixed(2)}\nTotal Amount: ₹${totalAmount.toFixed(2)}\n\nThank you for your purchase!`;
+
+    // Create a blob and trigger download
+    const blob = new Blob([receiptText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `GreenGridNexus_Receipt_${transactionId}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
     toast.success("Receipt downloaded successfully");
   };
 

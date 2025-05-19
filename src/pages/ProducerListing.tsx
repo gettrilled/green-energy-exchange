@@ -1,7 +1,7 @@
-
 import React from 'react';
 import Navbar from '../components/layout/Navbar';
 import ProducerForm from '../components/producer/ProducerForm';
+import ChatBot from '../components/ui/ChatBot';
 
 const ProducerListing = () => {
   return (
@@ -22,6 +22,7 @@ const ProducerListing = () => {
           <ProducerForm />
         </div>
       </div>
+      <ChatBot />
     </div>
   );
 };

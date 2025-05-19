@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import GlassCard from '../components/ui/GlassCard';
 import Button from '../components/ui/Button';
 import Navbar from '../components/layout/Navbar';
+import ChatBot from '../components/ui/ChatBot';
 
 // Mock data for dashboard
 const producerData = {
@@ -291,6 +292,7 @@ const Dashboard = () => {
           </GlassCard>
         </div>
       </div>
+      <ChatBot />
     </div>
   );
 };

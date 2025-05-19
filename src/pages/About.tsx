@@ -1,9 +1,9 @@
-
 import React from 'react';
 import Navbar from '../components/layout/Navbar';
 import Button from '../components/ui/Button';
 import GlassCard from '../components/ui/GlassCard';
 import { Globe, Leaf, LightbulbOff, Shield, Users, Zap } from 'lucide-react';
+import ChatBot from '../components/ui/ChatBot';
 
 const About = () => {
   return (
@@ -143,6 +143,7 @@ const About = () => {
             </div>
           </div>
         </div>
+        <ChatBot />
       </div>
     </div>
   );

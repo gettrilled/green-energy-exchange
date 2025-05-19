@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
@@ -7,6 +6,8 @@ import Button from '../components/ui/Button';
 import PurchaseModal from '../components/marketplace/PurchaseModal';
 import ProducerProfileModal from '../components/marketplace/ProducerProfileModal';
 import { useEnergyListings } from '../context/EnergyListingsContext';
+import { fetchEnergyMarketData } from '../lib/energyMarketApi';
+import ChatBot from '../components/ui/ChatBot';
 
 // Mock data for marketplace
 const defaultEnergyListings = [
@@ -347,6 +348,7 @@ const Marketplace = () => {
           />
         </>
       )}
+      <ChatBot />
     </div>
   );
 };
